@@ -6,6 +6,7 @@
 | 项目 | 内容 |
 |---|---|
 | 项目名称 | Claude Desktop 简体中文汉化（Claude Desktop Simplified Chinese Localization） |
+| 仓库地址 | **https://github.com/CGxiao5/claude-desktop-zh** |
 | 当前版本 | **v4.1** |
 | 作者 | CGxiao5 |
 | 开源许可 | **MIT**（见 [`LICENSE`](LICENSE)） |
@@ -138,7 +139,7 @@ Claude Desktop 是 Electron 应用，界面文本分散在**五个层次**，本
 ### 3.2 获取项目
 
 ```bash
-git clone https://github.com/CGxiao5/AI.git
+git clone https://github.com/CGxiao5/claude-desktop-zh.git
 cd AI
 ```
 

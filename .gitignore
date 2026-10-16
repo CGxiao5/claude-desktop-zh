@@ -33,6 +33,18 @@ python_env/
 dist/
 build/
 
+# ---------- 3b. Node / 前端依赖与测试产物（本项目无 Node 依赖，仅防误提交） ----------
+node_modules/
+jspm_packages/
+.npm/
+.yarn/
+.pnpm-store/
+coverage/
+.nyc_output/
+*.tsbuildinfo
+.cache/
+.parcel-cache/
+
 # ---------- 4. 运行时产物：词条仓库自动备份（体积大且可重建） ----------
 zh/resources/translations/backup/
 
