@@ -1,0 +1,12 @@
+{
+  "name": "Claude 汉化包内置 Python 运行时",
+  "version": "3.15.0",
+  "tag": "315",
+  "build_time": "2026-10-16 18:12:26",
+  "source_python": "D:\\Program Files\\Python315\\python.exe",
+  "python_exe": "python.exe",
+  "pythonw_exe": "pythonw.exe",
+  "service_host": "pythonservice.exe",
+  "python_dll": "python315.dll",
+  "files": 300
+}

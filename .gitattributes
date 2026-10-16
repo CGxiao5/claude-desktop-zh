@@ -1,0 +1,29 @@
+# ============================================================
+#  Claude Desktop 简体中文汉化 —— Git 属性规则
+# ============================================================
+#
+# ★ 最重要的一条 ★
+#   Claude汉化.cmd 是 **GBK 编码** 的 Windows 批处理文件。
+#   cmd.exe 始终按系统 ANSI 代码页（中文 Windows 为 936/GBK）解析 .cmd，
+#   若换行符被 Git 转换，或内容被当作 UTF-8 处理，中文会被误解析——
+#   轻则乱码，重则某些字节被当成引号/管道符，直接破坏 for /f 与 echo 的语法。
+#
+#   -text 表示：不做任何换行符转换、不做编码猜测，入库与检出都保持字节原样。
+#
+*.cmd   -text
+
+# 其余文本类文件按常规文本处理（由 core.autocrlf 统一管理）
+*.ps1   text
+*.py    text
+*.md    text
+*.json  text
+*.txt   text
+
+# 二进制资源（内置 Python 运行时的 DLL / EXE / PYD）
+# Git 会自动识别，此处显式声明以防误判
+*.dll   binary
+*.exe   binary
+*.pyd   binary
+*.zip   binary
+*.png   binary
+*.ico   binary

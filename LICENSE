@@ -1,0 +1,70 @@
+MIT License
+
+Copyright (c) 2026 CGxiao5
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+--------------------------------------------------------------------------
+以下中文说明仅为便于阅读的意译，不具备法律效力；
+一切权利义务以英文原文为准。
+
+版权所有 (c) 2026 CGxiao5
+
+特此免费授予任何获得本软件副本及相关文档文件（以下简称"本软件"）的人，
+不受限制地处理本软件，包括但不限于使用、复制、修改、合并、出版、发行、
+再许可和/或销售本软件副本的权利，并允许获得本软件的人这样做，
+但须满足以下条件：
+
+上述版权声明和本许可声明应包含在本软件的所有副本或实质性部分中。
+
+本软件按"原样"提供，不作任何明示或暗示的担保，包括但不限于适销性、
+特定用途适用性和非侵权性的担保。在任何情况下，作者或版权持有人均不对
+因本软件或本软件的使用或其他交易而引起的或与之相关的任何索赔、
+损害或其他责任负责，无论该责任是基于合同、侵权或其他原因。
+--------------------------------------------------------------------------
+
+
+==========================================================================
+第三方组件许可说明
+==========================================================================
+
+本项目随附的 zh/python/ 目录为精简后的 CPython 与 pywin32 运行文件，
+用于驱动 Windows 服务 Claude_zh，并非本项目原创代码：
+
+  · CPython 3.15.0
+      版权归 Python Software Foundation 所有
+      许可：Python Software Foundation License Version 2（PSF-2.0）
+      与 MIT 兼容，允许再分发
+      详见：https://docs.python.org/3/license.html
+
+  · pywin32（含 pythonservice.exe、pywintypes315.dll、win32/*.py）
+      版权归 Mark Hammond 及贡献者所有
+      许可：Python Software Foundation License Version 2（PSF-2.0）
+      详见：https://github.com/mhammond/pywin32
+
+  · Microsoft Visual C++ 运行库（vcruntime140.dll、vcruntime140_1.dll）
+      版权归 Microsoft Corporation 所有
+      受 Microsoft 软件许可条款约束，随 CPython 官方发行版一同再分发
+
+  · 其余 DLL（libffi-8.dll、libtommath.dll、zlib1.dll 等）
+      各自遵循其上游的宽松开源许可
+
+你也可以使用 zh/tools/build_embedded_python.py 从本机的 CPython + pywin32
+自行重建该运行时，而不使用仓库中随附的二进制文件。

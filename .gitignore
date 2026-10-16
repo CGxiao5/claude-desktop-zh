@@ -1,0 +1,79 @@
+# ============================================================
+#  Claude Desktop 简体中文汉化 —— Git 忽略规则
+# ============================================================
+
+# ---------- 1. 本地工作区与 AI 辅助目录（绝对不入仓） ----------
+.workbuddy/
+.workbuddy/**
+.claude/
+.codebuddy/
+.windsurf/
+
+# ---------- 2. Python 缓存与字节码 ----------
+# 说明：zh/python 内置运行时里的 __pycache__ 一并忽略，
+#       对应的 .py 源文件都在，首次导入时 Python 会自动重建。
+#
+# ★ 注意 ★  常见的 *.py[cod] 写法在 Windows 上是错的：
+#   其中的 d 会匹配 .pyd，而 .pyd 是 C 扩展模块（本质 DLL），
+#   如 _socket.pyd / _ctypes.pyd / win32service.pyd，删掉它们内置运行时直接瘫痪。
+#   因此这里只忽略真正的字节码缓存 .pyc / .pyo，并显式保留 .pyd。
+__pycache__/
+*.pyc
+*.pyo
+*$py.class
+!*.pyd
+
+# ---------- 3. 虚拟环境（本项目不依赖，仅防误提交） ----------
+.venv/
+venv/
+env/
+ENV/
+python_env/
+*.egg-info/
+dist/
+build/
+
+# ---------- 4. 运行时产物：词条仓库自动备份（体积大且可重建） ----------
+zh/resources/translations/backup/
+
+# ---------- 5. 构建/调试输出 ----------
+zh/tools/out/
+*.tmp
+*.temp
+*.swp
+*~
+
+# ---------- 6. 日志 ----------
+*.log
+logs/
+*.log.*
+
+# ---------- 7. 密钥与本地配置（防误提交） ----------
+.env
+.env.*
+*.key
+*.pem
+*.pfx
+*.p12
+*.crt
+secrets.json
+credentials.json
+token.txt
+*_token.txt
+
+# ---------- 8. 编辑器与操作系统 ----------
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---------- 9. 安装/卸载过程产生的中间文件 ----------
+claude-uninstall-*.log
+install-context.json
+state.json
+service.log
+*.zip

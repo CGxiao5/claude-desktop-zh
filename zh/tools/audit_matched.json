@@ -1,0 +1,944 @@
+{
+ "Cowork": {
+  "zh": "协作",
+  "src": "FE",
+  "keys": [
+   "+MH0VdRCHz"
+  ]
+ },
+ "Code": {
+  "zh": "代码",
+  "src": "FE",
+  "keys": [
+   "/GfNmXqa0P",
+   "0Aa0N5O99r",
+   "6DGKcWW2C1",
+   "G8PgU8iXdR",
+   "USCMzD6r9q",
+   "h2vipunVVd",
+   "t1orXzt4XO",
+   "yje76+c4Gb"
+  ]
+ },
+ "Artifacts": {
+  "zh": "工件",
+  "src": "FE",
+  "keys": [
+   "Y2q5SU8kAQ",
+   "eW5eoWkxy3"
+  ]
+ },
+ "Scheduled": {
+  "zh": "计划任务",
+  "src": "FE",
+  "keys": [
+   "cXAlMRerxW",
+   "cc+3C6KB4m"
+  ]
+ },
+ "Customize": {
+  "zh": "自定义",
+  "src": "FE",
+  "keys": [
+   "Fx/koR/KTo",
+   "TXpOBiuxud"
+  ]
+ },
+ "How can I help you today?": {
+  "zh": "今天我能帮你做什么？",
+  "src": "FE",
+  "keys": [
+   "ye34lid+ov"
+  ]
+ },
+ "Learn more": {
+  "zh": "了解更多",
+  "src": "FE",
+  "keys": [
+   "Nxt9hyc9rx",
+   "TdTXXf940t"
+  ]
+ },
+ "Commercial terms": {
+  "zh": "商业条款",
+  "src": "FE",
+  "keys": [
+   "FNsKoeaTyG"
+  ]
+ },
+ "Your privacy choices": {
+  "zh": "你的隐私选择",
+  "src": "FE",
+  "keys": [
+   "67fBqzpcva"
+  ]
+ },
+ "Settings": {
+  "zh": "设置",
+  "src": "FE",
+  "keys": [
+   "D3idYvSLF9",
+   "jqhhMImrPt",
+   "oHnsw1Zsb6",
+   "v4z+KE409I",
+   "wNRnvQMP6H"
+  ]
+ },
+ "General": {
+  "zh": "通用",
+  "src": "FE",
+  "keys": [
+   "1iEPTMDqmi",
+   "f0sgug52cn"
+  ]
+ },
+ "Import & export": {
+  "zh": "导入与导出",
+  "src": "FE",
+  "keys": [
+   "ZbqbfcKDqr"
+  ]
+ },
+ "This computer": {
+  "zh": "这台电脑",
+  "src": "FE",
+  "keys": [
+   "EeqYdGS5uw",
+   "Red8UM0oCv",
+   "YY998h82la"
+  ]
+ },
+ "System": {
+  "zh": "系统",
+  "src": "FE",
+  "keys": [
+   "+CwN9C/QFk",
+   "I2acb3TGcT"
+  ]
+ },
+ "What best describes your work?": {
+  "zh": "哪一项最能描述你的工作？",
+  "src": "FE",
+  "keys": [
+   "JIAWSQbG7m"
+  ]
+ },
+ "Appearance": {
+  "zh": "外观",
+  "src": "FE",
+  "keys": [
+   "2GURQYNPp3",
+   "nwKczbeayM",
+   "wF3XRBJOtl"
+  ]
+ },
+ "Chat font": {
+  "zh": "聊天字体",
+  "src": "FE",
+  "keys": [
+   "uxlQHrX3fg"
+  ]
+ },
+ "Motion": {
+  "zh": "动效",
+  "src": "FE",
+  "keys": [
+   "uALpKq2tu/"
+  ]
+ },
+ "Reduce animation in streaming responses and other interface elements.": {
+  "zh": "减少流式回复及其他界面元素中的动画。",
+  "src": "FE",
+  "keys": [
+   "bEl7R5hbRq"
+  ]
+ },
+ "Reduced": {
+  "zh": "减少",
+  "src": "FE",
+  "keys": [
+   "/8lcaWVENH"
+  ]
+ },
+ "Response completions": {
+  "zh": "回复完成提醒",
+  "src": "FE",
+  "keys": [
+   "KpNp7wDaY4"
+  ]
+ },
+ "Code appearance": {
+  "zh": "代码外观",
+  "src": "FE",
+  "keys": [
+   "hIk1k4YxSV"
+  ]
+ },
+ "Code font": {
+  "zh": "代码字体",
+  "src": "FE",
+  "keys": [
+   "oIN0FTiMLG"
+  ]
+ },
+ "Set a custom monospace font for code and terminal.": {
+  "zh": "为代码和终端设置自定义等宽字体。",
+  "src": "FE",
+  "keys": [
+   "vKKtEds9sW"
+  ]
+ },
+ "e.g. JetBrains Mono": {
+  "zh": "例如 JetBrains Mono",
+  "src": "FE",
+  "keys": [
+   "ujyyHE5nB/"
+  ]
+ },
+ "Interface font": {
+  "zh": "界面字体",
+  "src": "FE",
+  "keys": [
+   "ZHco1GSUHH"
+  ]
+ },
+ "Font licenses": {
+  "zh": "字体许可",
+  "src": "FE",
+  "keys": [
+   "qnhEQK6Ni0"
+  ]
+ },
+ "Transcript text size": {
+  "zh": "对话记录文字大小",
+  "src": "FE",
+  "keys": [
+   "dmrRy2Xkmo"
+  ]
+ },
+ "Size of the conversation transcript text.": {
+  "zh": "对话记录文字的大小。",
+  "src": "FE",
+  "keys": [
+   "csQSinIrNz"
+  ]
+ },
+ "Transcript width": {
+  "zh": "对话记录宽度",
+  "src": "FE",
+  "keys": [
+   "ZJehXppx5D"
+  ]
+ },
+ "Maximum width of the transcript and composer columns.": {
+  "zh": "对话记录与输入框列的最大宽度。",
+  "src": "FE",
+  "keys": [
+   "/+WjRhGY9p"
+  ]
+ },
+ "Wide": {
+  "zh": "宽",
+  "src": "FE",
+  "keys": [
+   "0iG6KVJuYc"
+  ]
+ },
+ "Default transcript view": {
+  "zh": "默认对话记录视图",
+  "src": "FE",
+  "keys": [
+   "bTg9qb70sr"
+  ]
+ },
+ "Normal": {
+  "zh": "普通",
+  "src": "FE",
+  "keys": [
+   "R9oOWXgWxi",
+   "yv8cErb+k7"
+  ]
+ },
+ "Thinking": {
+  "zh": "思考",
+  "src": "FE",
+  "keys": [
+   "AHQWDTo4+e",
+   "oogxH3q75G"
+  ]
+ },
+ "Sessions": {
+  "zh": "会话",
+  "src": "FE",
+  "keys": [
+   "F8OvMbtiW3",
+   "HG5KdMNuqG"
+  ]
+ },
+ "Flash the taskbar button when Claude needs your attention and the app isn't focused.": {
+  "zh": "当 Claude 需要你注意而应用未处于焦点状态时，闪烁任务栏按钮。",
+  "src": "FE",
+  "keys": [
+   "3SBJtWgrE1"
+  ]
+ },
+ "Keep computer awake while Claude works": {
+  "zh": "Claude 工作时保持计算机唤醒",
+  "src": "FE",
+  "keys": [
+   "EcEP8qH6+A"
+  ]
+ },
+ "Keep awake on battery power": {
+  "zh": "使用电池供电时保持唤醒",
+  "src": "FE",
+  "keys": [
+   "sLed/DhFoo"
+  ]
+ },
+ "Archive inactive sessions": {
+  "zh": "归档不活跃会话",
+  "src": "FE",
+  "keys": [
+   "Va2aVQRIyJ"
+  ]
+ },
+ "Inside project": {
+  "zh": "项目内",
+  "src": "FE",
+  "keys": [
+   "eI3zYFFnpz"
+  ]
+ },
+ "Where to store Git worktrees for isolated coding sessions.": {
+  "zh": "隔离编码会话的 Git worktree 存放位置。",
+  "src": "FE",
+  "keys": [
+   "MSsFqCg6Gh"
+  ]
+ },
+ "Output style": {
+  "zh": "输出风格",
+  "src": "FE",
+  "keys": [
+   "/jFmdFrLzq"
+  ]
+ },
+ "Default": {
+  "zh": "默认",
+  "src": "FE",
+  "keys": [
+   "7Aqe2/LqFL",
+   "lKv8ex1Pyg",
+   "lKv8exH0MR"
+  ]
+ },
+ "Keep cookies": {
+  "zh": "保留 Cookie",
+  "src": "FE",
+  "keys": [
+   "e6Cv5Y4QTL"
+  ]
+ },
+ "Until quit": {
+  "zh": "直到退出",
+  "src": "FE",
+  "keys": [
+   "w2AaFT5b5b"
+  ]
+ },
+ "Pull requests": {
+  "zh": "Pull 请求",
+  "src": "FE",
+  "keys": [
+   "uDMSR+gnHL"
+  ]
+ },
+ "Branch prefix": {
+  "zh": "分支前缀",
+  "src": "FE",
+  "keys": [
+   "88wJXbOjoo"
+  ]
+ },
+ "Prefix added to branch names for both local and cloud sessions.": {
+  "zh": "为本地和云端会话的分支名称添加的前缀。",
+  "src": "FE",
+  "keys": [
+   "Wq7kmqvTqf"
+  ]
+ },
+ "input + output tokens": {
+  "zh": "输入 + 输出令牌",
+  "src": "FE",
+  "keys": [
+   "ClSk6cFhAb"
+  ]
+ },
+ "Memory": {
+  "zh": "记忆",
+  "src": "FE",
+  "keys": [
+   "JxlSRWr2J/",
+   "dVx3yznM2C",
+   "x5UE3xG950"
+  ]
+ },
+ "Import isn't enabled for this deployment. Contact your organization's administrator to turn it on.": {
+  "zh": "此部署未启用导入功能。请联系你组织的管理员开启。",
+  "src": "FE",
+  "keys": [
+   "r3JVDltSqg"
+  ]
+ },
+ "Desktop app version": {
+  "zh": "桌面应用版本",
+  "src": "FE",
+  "keys": [
+   "fzDl58Rwrd"
+  ]
+ },
+ "Automatically start Claude when you log in to your computer.": {
+  "zh": "登录计算机时自动启动 Claude。",
+  "src": "FE",
+  "keys": [
+   "T9ycmKgh1s"
+  ]
+ },
+ "Quickly open Claude from anywhere.": {
+  "zh": "从任意位置快速打开 Claude。",
+  "src": "FE",
+  "keys": [
+   "ccFJHoHceh"
+  ]
+ },
+ "Keep Claude running in the system tray.": {
+  "zh": "让 Claude 在系统托盘中保持运行。",
+  "src": "FE",
+  "keys": [
+   "tPrRgPHF6R"
+  ]
+ },
+ "Edit config": {
+  "zh": "编辑配置",
+  "src": "FE",
+  "keys": [
+   "/Z1D1eCmBA"
+  ]
+ },
+ "Search skills and plugins": {
+  "zh": "搜索技能和插件",
+  "src": "FE",
+  "keys": [
+   "n3VpmrDQYa"
+  ]
+ },
+ "Add": {
+  "zh": "添加",
+  "src": "FE",
+  "keys": [
+   "2/2yg+qAwp",
+   "NkHVQqZyPE",
+   "alWu/MbgXB"
+  ]
+ },
+ "Add your first skills": {
+  "zh": "添加你的第一个技能",
+  "src": "FE",
+  "keys": [
+   "gcU7Ur/D71"
+  ]
+ },
+ "Skills teach Claude how you work.": {
+  "zh": "技能教会 Claude 你的工作方式。",
+  "src": "FE",
+  "keys": [
+   "w39ST2SJHc"
+  ]
+ },
+ "Search connectors": {
+  "zh": "搜索连接器",
+  "src": "FE",
+  "keys": [
+   "xM1SiMNUGM"
+  ]
+ },
+ "Add your first connectors": {
+  "zh": "添加你的第一个连接器",
+  "src": "FE",
+  "keys": [
+   "Ep5aBa3gJK"
+  ]
+ },
+ "Connectors let Claude work with your team's tools and data.": {
+  "zh": "连接器让 Claude 能使用你团队的工具和数据。",
+  "src": "FE",
+  "keys": [
+   "PXiJ+nljd4"
+  ]
+ },
+ "Your plugins": {
+  "zh": "你的插件",
+  "src": "FE",
+  "keys": [
+   "1onhc0sgyt",
+   "6qc5nEZtUh"
+  ]
+ },
+ "Add your first plugins": {
+  "zh": "添加你的第一个插件",
+  "src": "FE",
+  "keys": [
+   "zLXPyIM8X/"
+  ]
+ },
+ "Give Claude role-level expertise with plugins.": {
+  "zh": "通过插件赋予 Claude 角色级专业能力。",
+  "src": "FE",
+  "keys": [
+   "jcaOQvQtmx"
+  ]
+ },
+ "Search settings": {
+  "zh": "搜索设置",
+  "src": "FE",
+  "keys": [
+   "NbCdfW9bJf",
+   "pyTWlkS60A"
+  ]
+ },
+ "Limits": {
+  "zh": "限制",
+  "src": "FE",
+  "keys": [
+   "TDrunp5flH"
+  ]
+ },
+ "Egress": {
+  "zh": "出站",
+  "src": "FE",
+  "keys": [
+   "tUQQ2GOXCS"
+  ]
+ },
+ "Default model effort": {
+  "zh": "默认模型 effort",
+  "src": "FE",
+  "keys": [
+   "63NOuwomJM"
+  ]
+ },
+ "Show estimated cost": {
+  "zh": "显示预估费用",
+  "src": "FE",
+  "keys": [
+   "dqCubkxbYK"
+  ]
+ },
+ "Model catalog metadata": {
+  "zh": "模型目录元数据",
+  "src": "FE",
+  "keys": [
+   "go+bdjd1f9"
+  ]
+ },
+ "Model catalog URL": {
+  "zh": "模型目录 URL",
+  "src": "FE",
+  "keys": [
+   "7QWnJvdV6y"
+  ]
+ },
+ "Proxy server URL": {
+  "zh": "代理服务器 URL",
+  "src": "FE",
+  "keys": [
+   "A/z9Ko1sje"
+  ]
+ },
+ "Proxy auto-config (PAC) URL": {
+  "zh": "代理自动配置（PAC）URL",
+  "src": "FE",
+  "keys": [
+   "0DhMVtlmyQ"
+  ]
+ },
+ "Enable IPv6 in the workspace VM": {
+  "zh": "在工作区 VM 中启用 IPv6",
+  "src": "FE",
+  "keys": [
+   "JHTnwZf+m3"
+  ]
+ },
+ "Chat retention period": {
+  "zh": "聊天保留期",
+  "src": "FE",
+  "keys": [
+   "Qmc45WB3Fw"
+  ]
+ },
+ "Cowork retention period": {
+  "zh": "Cowork 保留期",
+  "src": "FE",
+  "keys": [
+   "94H0hll7CE"
+  ]
+ },
+ "Code retention period": {
+  "zh": "Code 保留期",
+  "src": "FE",
+  "keys": [
+   "n8pR7uBR/o"
+  ]
+ },
+ "Suspend session deletion": {
+  "zh": "暂停会话删除",
+  "src": "FE",
+  "keys": [
+   "Mm7TNf2YCM"
+  ]
+ },
+ "Suspend all automatic session deletion for these users (legal hold). While on, the retention periods above delete nothing.": {
+  "zh": "暂停这些用户的所有自动会话删除（法律保全）。开启期间，上述保留期不会删除任何内容。",
+  "src": "FE",
+  "keys": [
+   "l86egk4Pyb"
+  ]
+ },
+ "Per-user soft cap, counted client-side over the token cap window. Not a server-enforced quota.": {
+  "zh": "按用户的软上限，在令牌上限窗口内由客户端统计。不是服务端强制配额。",
+  "src": "FE",
+  "keys": [
+   "DJ6DrJYlMf"
+  ]
+ },
+ "days": {
+  "zh": "天",
+  "src": "FE",
+  "keys": [
+   "Bc20laBenW"
+  ]
+ },
+ "minutes": {
+  "zh": "分钟",
+  "src": "FE",
+  "keys": [
+   "ConfigRecheckIntervalMinutesSuffix"
+  ]
+ },
+ "Hide configuration deprecation warnings": {
+  "zh": "隐藏配置弃用警告",
+  "src": "FE",
+  "keys": [
+   "8SscF6CJAT"
+  ]
+ },
+ "Don't show users the in-app warning that this configuration uses a deprecated field. The final reminder in the 24 hours before the cut-off still appears.": {
+  "zh": "不向用户显示“此配置使用了已弃用字段”的应用内警告。截止前 24 小时的最后提醒仍会显示。",
+  "src": "FE",
+  "keys": [
+   "84H2bDOPZR"
+  ]
+ },
+ "Git repositories or hosted marketplace.json URLs to surface as plugin marketplaces in the Directory's Organization tab. The app re-fetches each periodically.": {
+  "zh": "Git 仓库或托管的 marketplace.json URL，会在目录的“组织”标签页中显示为插件市场。应用会定期重新获取每个来源。",
+  "src": "FE",
+  "keys": [
+   "57U/34BfkA"
+  ]
+ },
+ "Hosts your network firewall must allow, derived from your current settings. This list is read-only and updates as you make changes. Traffic is HTTPS on port 443 unless an entry shows a port or starts with http://.": {
+  "zh": "根据你当前的设置推导出的、网络防火墙必须允许的主机列表。此列表为只读，会随你的更改而更新。除非条目显示端口或以 http:// 开头，否则流量均为 443 端口的 HTTPS。",
+  "src": "FE",
+  "keys": [
+   "mdvoDuAMkh"
+  ]
+ },
+ "Scheduled-task tool approval lifetime": {
+  "zh": "计划任务工具批准有效期",
+  "src": "FE",
+  "keys": [
+   "yqgGAUV4YP"
+  ]
+ },
+ "How many days a scheduled task may reuse a lasting MCP-tool approval before it asks again. 0 removes the lasting option.": {
+  "zh": "计划任务可复用持久 MCP 工具批准的天数，超过后需重新批准。0 表示禁用持久批准。",
+  "src": "FE",
+  "keys": [
+   "au5x3V9PvH"
+  ]
+ },
+ "Allowed plugin MCP servers": {
+  "zh": "允许的插件 MCP 服务器",
+  "src": "FE",
+  "keys": [
+   "vUSpcWJDNG"
+  ]
+ },
+ "Blocked plugin MCP servers": {
+  "zh": "阻止的插件 MCP 服务器",
+  "src": "FE",
+  "keys": [
+   "nNohigULem"
+  ]
+ },
+ "MCP tool call timeout": {
+  "zh": "MCP 工具调用超时",
+  "src": "FE",
+  "keys": [
+   "yfZOCQ8bcU"
+  ]
+ },
+ "Per-call timeout for MCP tool calls, in seconds. Default 180 (3 minutes).": {
+  "zh": "MCP 工具调用的单次超时时间（秒）。默认 180（3 分钟）。",
+  "src": "FE",
+  "keys": [
+   "TKg4Ha2DBx"
+  ]
+ },
+ "Allow none": {
+  "zh": "全部禁止",
+  "src": "FE",
+  "keys": [
+   "XghxpOcHfF"
+  ]
+ },
+ "Enable import": {
+  "zh": "启用导入",
+  "src": "FE",
+  "keys": [
+   "c4gImpEnbl"
+  ]
+ },
+ "Organizations users may import from": {
+  "zh": "允许用户从以下组织导入",
+  "src": "FE",
+  "keys": [
+   "JWDj9FZ3tB"
+  ]
+ },
+ "When set, users import by sign-in only, and only from the Claude.ai organizations with these IDs.": {
+  "zh": "设置后，用户只能通过登录导入，且只能从具有这些 ID 的 Claude.ai 组织导入。",
+  "src": "FE",
+  "keys": [
+   "YIm8r9KgW7"
+  ]
+ },
+ "Automatically import earlier third-party sessions": {
+  "zh": "自动导入更早的第三方会话",
+  "src": "FE",
+  "keys": [
+   "c4gImpAuto"
+  ]
+ },
+ "Enable session export": {
+  "zh": "启用会话导出",
+  "src": "FE",
+  "keys": [
+   "c4gImpExEn"
+  ]
+ },
+ "Import prompt banner": {
+  "zh": "导入提示横幅",
+  "src": "FE",
+  "keys": [
+   "c4gImpBnr0"
+  ]
+ },
+ "Where OpenTelemetry logs and metrics are sent. Leave blank to disable.": {
+  "zh": "OpenTelemetry 日志和指标的发送地址。留空表示禁用。",
+  "src": "FE",
+  "keys": [
+   "Zhe9UuhccO"
+  ]
+ },
+ "Stop Claude Desktop from fetching updates entirely (no time limit). You'll need to push new versions yourself.": {
+  "zh": "完全阻止 Claude Desktop 获取更新（无时间限制）。你需要自行推送新版本。",
+  "src": "FE",
+  "keys": [
+   "t/LNoeQ72j"
+  ]
+ },
+ "Hours before a downloaded update force-installs. Only applies when auto-updates are enabled. Blank = 72-hour default.": {
+  "zh": "已下载的更新在多少小时后强制安装。仅在启用自动更新时生效。留空 = 默认 72 小时。",
+  "src": "FE",
+  "keys": [
+   "VyqfjIW6Iv"
+  ]
+ },
+ "Check for updates on releases.claude.com": {
+  "zh": "在 releases.claude.com 上检查更新",
+  "src": "FE",
+  "keys": [
+   "UpdateViaUpdatesHost"
+  ]
+ },
+ "Read the update feed from releases.claude.com so api.anthropic.com can stay blocked.": {
+  "zh": "从 releases.claude.com 读取更新源，以便继续屏蔽 api.anthropic.com。",
+  "src": "FE",
+  "keys": [
+   "UpdateViaUpdatesHostShort"
+  ]
+ },
+ "Configuration relaunch window": {
+  "zh": "配置重启窗口",
+  "src": "FE",
+  "keys": [
+   "RelaunchEnforcementHoursTitle"
+  ]
+ },
+ "Hours a user may keep working on the old configuration after a managed-configuration change is detected. 0 = restart required at once. Blank = 24 hours.": {
+  "zh": "检测到托管配置变更后，用户可继续使用旧配置的小时数。0 = 立即重启。留空 = 24 小时。",
+  "src": "FE",
+  "keys": [
+   "RelaunchEnforcementHoursShort"
+  ]
+ },
+ "Configuration re-check interval": {
+  "zh": "配置重新检查间隔",
+  "src": "FE",
+  "keys": [
+   "ConfigRecheckIntervalMinutesTitle"
+  ]
+ },
+ "Minutes between the running app's checks for a changed managed configuration. Blank = 10 minutes.": {
+  "zh": "运行中的应用检查托管配置变更的间隔分钟数。留空 = 10 分钟。",
+  "src": "FE",
+  "keys": [
+   "ConfigRecheckIntervalMinutesShort"
+  ]
+ },
+ "Delete chats, with their files, after this many days without activity. Unset: kept until the user deletes them. Projects and memory stay.": {
+  "zh": "在多少天无活动后删除聊天及其文件。不设置：保留直到用户删除。项目和记忆不受影响。",
+  "src": "FE",
+  "keys": [
+   "rtyAcXYbBI"
+  ]
+ },
+ "Delete Cowork tasks, with their uploads and outputs, after this many days without activity. Unset: kept until the user deletes them. Spaces and memory stay.": {
+  "zh": "在多少天无活动后删除 Cowork 任务及其上传和输出。不设置：保留直到用户删除。空间和记忆不受影响。",
+  "src": "FE",
+  "keys": [
+   "XMgSZ82SVH"
+  ]
+ },
+ "Delete Code sessions, conversation included, after this many days without activity. Unset: kept until the user deletes them. Uncommitted work stays on disk.": {
+  "zh": "在多少天无活动后删除 Code 会话（包括对话内容）。不设置：保留直到用户删除。未提交的工作保留在磁盘上。",
+  "src": "FE",
+  "keys": [
+   "v1o1JWREP7"
+  ]
+ },
+ "Connector favicons, artifact-preview and MCP Apps iframes, and the Linux spellcheck dictionary. Connector widgets fall back to text; spellcheck is off on Linux.": {
+  "zh": "连接器网站图标、artifact 预览和 MCP Apps 的 iframe，以及 Linux 拼写检查词典。连接器小部件将回退为文本；Linux 上拼写检查关闭。",
+  "src": "FE",
+  "keys": [
+   "iwXupWG0F3"
+  ]
+ },
+ "Lets users import a Claude.ai data export and earlier Claude sessions on this computer from Settings → Import. Doesn't affect a provisioned sign-in import.": {
+  "zh": "允许用户从“设置 → 导入”导入 Claude.ai 数据导出文件以及此计算机上更早的 Claude 会话。不影响预配置登录导入。",
+  "src": "FE",
+  "keys": [
+   "OIB3Xj6IhR"
+  ]
+ },
+ "Servers plugins may connect in sessions, beyond the managed list above and organization plugins. An empty list allows none; unset keeps today's rules.": {
+  "zh": "插件在会话中可连接的服务器（上述托管列表和组织插件之外）。空列表表示全部禁止；不设置则保持现有规则。",
+  "src": "FE",
+  "keys": [
+   "y4jySlHrtX"
+  ]
+ },
+ "Opt into the new Chat and Cowork unified view": {
+  "zh": "启用新的聊天与 Cowork 统一视图",
+  "src": "FE",
+  "keys": [
+   "G6NWsn7zZy"
+  ]
+ },
+ "Block reads outside working directories": {
+  "zh": "阻止读取工作目录之外的内容",
+  "src": "FE",
+  "keys": [
+   "GQrrmfzD4R"
+  ]
+ },
+ "Disable bypass permissions mode": {
+  "zh": "禁用绕过权限模式",
+  "src": "FE",
+  "keys": [
+   "CIeOvXouGu"
+  ]
+ },
+ "Allow user-created skills": {
+  "zh": "允许用户创建的技能",
+  "src": "FE",
+  "keys": [
+   "y486fMBVj/"
+  ]
+ },
+ "Allow user-added plugin marketplaces": {
+  "zh": "允许用户添加的插件市场",
+  "src": "FE",
+  "keys": [
+   "v/P6I/BbB8"
+  ]
+ },
+ "Allow user-added plugins": {
+  "zh": "允许用户添加的插件",
+  "src": "FE",
+  "keys": [
+   "FC6Rd6B6Wv"
+  ]
+ },
+ "Allow scheduled tasks": {
+  "zh": "允许计划任务",
+  "src": "FE",
+  "keys": [
+   "scheduledTasksEnabledTitle"
+  ]
+ },
+ "Allow the built-in browser": {
+  "zh": "允许内置浏览器",
+  "src": "FE",
+  "keys": [
+   "WpkucDWuLT"
+  ]
+ },
+ "SSH host allowlist": {
+  "zh": "SSH 主机允许列表",
+  "src": "FE",
+  "keys": [
+   "t3bJrMvGzZ"
+  ]
+ },
+ "SSH connection engine": {
+  "zh": "SSH 连接引擎",
+  "src": "FE",
+  "keys": [
+   "SshTransportTitle"
+  ]
+ },
+ "Scope": {
+  "zh": "作用域",
+  "src": "FE",
+  "keys": [
+   "nso3MjkMl+"
+  ]
+ },
+ "Stream idle timeout": {
+  "zh": "流式空闲超时",
+  "src": "FE",
+  "keys": [
+   "1zaCZqzDhD"
+  ]
+ },
+ "Every model that offers 1M, in your list or from your gateway, shows one option and requests 1M.": {
+  "zh": "凡支持 1M 的模型（无论来自你的列表还是网关）都只显示一个选项并请求 1M。",
+  "src": "FE",
+  "keys": [
+   "XbCo6omBCD"
+  ]
+ }
+}
