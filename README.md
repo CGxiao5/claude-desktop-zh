@@ -17,6 +17,27 @@
 
 ---
 
+## 界面预览
+
+以下截图均来自汉化后的 Claude Desktop（Windows MSIX 版 `2.42304.0.0`），界面语言 `zh-Hans`。
+
+**1. 主界面** —— 侧边栏导航（搜索/聊天/项目/计划任务等）、欢迎语「你来了！」、模型选择器与建议操作全部为简体中文
+![主界面](docs/screenshots/screenshot-01-home.png)
+
+**2. 设置 · 外观** —— 主题、代码字体、界面字体、界面缩放、对话记录宽度及各功能开关均为中文
+![设置-外观](docs/screenshots/screenshot-02-settings-appearance.png)
+
+**3. 设置 · 技能** —— 功能预览、智能体开关、联网搜索与自定义技能管理界面均已汉化
+![设置-技能](docs/screenshots/screenshot-03-settings-skills.png)
+
+**4. 对话与斜杠命令** —— 提问引导语、模型对比表格与 `/` 命令面板（schedule、todos、plan 等）中文可用
+![对话与斜杠命令](docs/screenshots/screenshot-04-slash-commands.png)
+
+**5. 语言选择器** —— 「选择你的语言」弹窗中「简体中文 (Chinese (Simplified))」高亮可选
+![语言选择器](docs/screenshots/screenshot-05-language-picker.png)
+
+---
+
 ## 一、项目简介与来源
 
 ### 1.1 这是什么
