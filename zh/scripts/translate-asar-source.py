@@ -130,7 +130,14 @@ def parse_asar(data):
 
     files: [{'path','start','end','integrity','size'}]，start/end 为绝对偏移。
     """
+    # 文件被截断/损坏时，下面的切片解包会抛 struct.error 堆栈。这里先做长度
+    # 校验，给出可读的失败原因，便于定位（安装中断时尤其重要）。
+    if len(data) < 16:
+        raise ValueError('app.asar 过小（%d 字节），不是合法的 asar 文件' % len(data))
     js_len = struct.unpack('<I', bytes(data[12:16]))[0]
+    if js_len <= 0 or 16 + js_len > len(data):
+        raise ValueError('app.asar header 长度异常（js_len=%d，文件 %d 字节）'
+                         % (js_len, len(data)))
     hdr_raw = bytearray(data[16:16 + js_len])
     j = json.loads(bytes(hdr_raw).decode('utf-8'))
     base = 16 + js_len

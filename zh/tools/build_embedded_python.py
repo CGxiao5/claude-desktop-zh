@@ -102,7 +102,11 @@ def find_source_python(explicit=None):
         parts = out.stdout.strip().split()
         if len(parts) < 3:
             continue
-        maj, minr = int(parts[0]), int(parts[1])
+        # 探针输出格式异常时 int() 会抛 ValueError 中断整个构建，按"此候选不可用"处理
+        try:
+            maj, minr = int(parts[0]), int(parts[1])
+        except ValueError:
+            continue
         prefix = ' '.join(parts[2:])
         return {'exe': c, 'prefix': prefix, 'ver': '%d%d' % (maj, minr),
                 'version': '%d.%d' % (maj, minr)}

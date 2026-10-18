@@ -22,9 +22,9 @@ def _running_watchers():
     for cmd in (
         ['wmic', 'process', 'where', "name like 'python%.exe'", 'get', 'commandline'],
         ['powershell', '-NoProfile', '-Command',
-         "[@(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | "
-         "Where-Object { $_.Name -match '^python' -and "
-         "$_.CommandLine -match 'skills-watch' })].Count"],
+         ("[@(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | "
+          "Where-Object { $_.Name -match '^python' -and "
+          "$_.CommandLine -match 'skills-watch' })].Count")],
     ):
         try:
             r = subprocess.run(cmd, capture_output=True, text=True, timeout=20)
@@ -219,12 +219,108 @@ def asar_integrity_selfcheck():
     return (l1, got, want, files, data, base), None
 
 
+# 旧版写死的清单（前端资源名带内容哈希，Claude 升级即变，仅作最后兜底）
+LEGACY_JS_FILES = ('c49da61a8-CCivQmSM.js', 'shared-21-DExJa6Im.js',
+                   'shared-20-78nc04b9.js', 'shared-52-DOMr1cuc.js')
+
+
+def _shell_official_from_archive():
+    """从卸载归档 zip 中取回安装前备份的官方 shell 词表。
+
+    卸载会连 .claude\\zh（含 backup）一起删除，但卸载流程会先把整个目录归档到
+    %TEMP%\\claude-zh-uninstall-<ts>.zip（供误卸载找回）。有它就能做精确比对，
+    否则只能按"键是否存在"猜测——而官方原版本来就含部分 overlay 键，会误报。
+    """
+    import glob
+    import zipfile
+    tmp = os.environ.get('TEMP') or os.environ.get('TMP') or ''
+    if not tmp:
+        return None
+    zs = sorted(glob.glob(os.path.join(tmp, 'claude-zh-uninstall-*.zip')),
+                key=os.path.getmtime, reverse=True)
+    for zp in zs:
+        try:
+            zf = zipfile.ZipFile(zp)
+        except Exception:
+            continue
+        cands = [n for n in zf.namelist()
+                 if n.replace('\\', '/').startswith('backup/')
+                 and n.endswith('shell-zh-Hans.json')]
+        if not cands:
+            continue
+        sel = None
+        if VERSION:
+            for n in cands:
+                if '/' + VERSION + '/' in n.replace('\\', '/'):
+                    sel = n
+                    break
+        try:
+            return json.loads(zf.read(sel or cands[0]).decode('utf-8'))
+        except Exception:
+            continue
+    return None
+
+
+def _js_patch_targets(assets_dir):
+    """解析本版本的 JS 补丁目标文件名。
+
+    前端资源是带内容哈希的文件名（如 shared-52-<hash>.js），Claude 每次升级
+    哈希都会变，写死必然失效（表现为 [6] 项全部"文件不存在"）。优先级：
+      1) state.json 的 js[].path —— 安装时写入的真实文件名，最可靠
+      2) 备份目录中的 .js 原始文件名 —— 卸载态据此做字节还原核验
+      3) assets 目录内容扫描（命中补丁特征串）
+      4) 旧版写死清单
+    """
+    names = []
+    st = os.path.join(ZH_HOME, 'state.json')
+    if os.path.isfile(st):
+        try:
+            for it in json.load(open(st, encoding='utf-8')).get('js', []):
+                n = os.path.basename(it.get('path') or '')
+                if n.endswith('.js') and n not in names:
+                    names.append(n)
+        except Exception:
+            names = []
+    if not names and os.path.isdir(BAK_DIR):
+        names = sorted(n for n in os.listdir(BAK_DIR) if n.endswith('.js'))
+    if not names and os.path.isdir(assets_dir):
+        # 内容扫描：先按"已打补丁"特征找（安装态），再按"英文原版"特征找
+        # （卸载态补丁已还原，中文特征不复存在，只认中文会一无所获）。
+        # 候选限定为带内容哈希的前端文件名，避免扫全目录。
+        patched = (b'"en-US","zh-Hans"', b'localName:"\\u7B80',
+                   b'label:"\\u804A', b'label:"\\u534F')
+        original = (b'"en-US","de-DE","fr-FR"',
+                    b'localName:"English (United States)"',
+                    b'label:"Chat"', b'label:"Cowork"', b'label:"Code"')
+        cand = [n for n in sorted(os.listdir(assets_dir))
+                if n.endswith('.js') and re.match(r'^(shared-\d+|c49da61a8)-', n)]
+        for marks in (patched, original):
+            for n in cand:
+                try:
+                    b = open(os.path.join(assets_dir, n), 'rb').read()
+                except Exception:
+                    continue
+                if any(m in b for m in marks) and n not in names:
+                    names.append(n)
+            if names:
+                break
+    return names or list(LEGACY_JS_FILES)
+
+
 def main():
     mode = sys.argv[1] if len(sys.argv) > 1 else 'auto'
     fe = load(I18N)
     shell = load(SHELL)
     conf = load(CONF) or {}
-    installed = bool(fe) and conf.get('locale') == 'zh-Hans'
+    # 状态判定：locale 为主证据，但不能作为唯一证据——config.json 由 Claude
+    # 首次启动后生成，全新安装时并不存在（安装脚本会打印"[警告] 未找到
+    # config.json"），此时仅凭 locale 会误判为"已卸载"，进而跑错核验分支、
+    # 产生整屏误报 FAIL。故并列采用 install-context.json / state.json 作为
+    # 安装态证据：二者由安装写入，卸载时随 .claude\zh 一并删除。
+    _evidences = [os.path.join(ZH_HOME, n)
+                  for n in ('install-context.json', 'state.json')]
+    installed = bool(fe) and (conf.get('locale') == 'zh-Hans'
+                              or any(os.path.isfile(p) for p in _evidences))
 
     print('=' * 66)
     print('  汉化状态核验  |  判定: %s' % ('已安装(汉化态)' if installed else '已卸载(英文态)'))
@@ -245,7 +341,13 @@ def main():
 
         print('\n[2] locale 配置')
         print('      config.json locale = %r' % conf.get('locale'))
-        chk(conf.get('locale') == 'zh-Hans', 'locale 为 zh-Hans')
+        if not os.path.exists(CONF):
+            # config.json 由 Claude 首次启动后生成；全新安装时尚不存在，安装脚本
+            # 已就此打印"[警告] 未找到 config.json，将在首次启动后生效"。
+            # 属预期过渡态，不计为失败（服务首次自愈时会补写 locale）。
+            print('      [跳过] config.json 尚未生成（Claude 首次启动后写入，属预期）')
+        else:
+            chk(conf.get('locale') == 'zh-Hans', 'locale 为 zh-Hans')
 
         print('\n[3] 本轮新增 FE 词条落盘核验')
         if fe:
@@ -299,10 +401,11 @@ def main():
                         (DYN, 'ion-dist/i18n/dynamic/zh-Hans.json')):
             chk(not os.path.exists(p), '已删除 %s' % name)
         # 注意：resources/zh-Hans.json 是 Claude 官方自带文件，本身含官方中文词条，
-        # 因此不能按"是否含中文"判定。优先与安装前备份做字节级比对；
-        # v3.0 起卸载会归档并删除 .claude\zh（备份随之入 zip），无备份时改用
-        # 键集核验：shell-overlay 的 480 条全部是官方表不存在的新键
-        # （605 官方 + 480 增补 = 1085），官方还原态不应含其中任何一个键。
+        # 因此不能按"是否含中文"判定，只能与官方原版比对，来源优先级：
+        #   1) 安装前备份 .claude\zh\backup\<ver>\shell-zh-Hans.json（字节级）
+        #   2) 卸载归档 zip（卸载会删除 .claude\zh，但先归档到 %TEMP%，可取回）
+        # 两者都不可用时**不能**退回"overlay 键是否存在"判定：官方原版本来就含
+        # 部分 overlay 键（实测 14 个，值亦与官方完全一致），那样会误报残留。
         bak_shell = os.path.join(BAK_DIR, 'shell-zh-Hans.json')
         if os.path.exists(bak_shell) and os.path.exists(SHELL):
             same = open(bak_shell, 'rb').read() == open(SHELL, 'rb').read()
@@ -310,17 +413,25 @@ def main():
         elif not os.path.exists(SHELL):
             chk(True, 'resources/zh-Hans.json 已移除')
         elif os.path.exists(SHELL):
-            _ovp = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-                                'resources', 'shell-overlay-zh.json')
-            try:
-                _ov = json.load(open(_ovp, encoding='utf-8'))
-                _dep = json.load(open(SHELL, encoding='utf-8'))
-                _resid = [k for k in _ov if k in _dep]
-                chk(not _resid,
-                    'resources/zh-Hans.json 无汉化增补键残留（overlay 键命中 %d）'
-                    % len(_resid))
-            except Exception as e:
-                chk(False, 'shell 词表还原核验失败', str(e))
+            _official = _shell_official_from_archive()
+            if _official is None:
+                print('      [跳过] 无官方原版可比对（备份已随 .claude\\zh 归档删除，'
+                      '且未找到卸载归档 zip），不做残留判定')
+            else:
+                try:
+                    _dep = json.load(open(SHELL, encoding='utf-8'))
+                except Exception as e:
+                    chk(False, 'shell 词表读取失败', str(e))
+                    _dep = None
+                if _dep is not None:
+                    _diff = [k for k, v in _official.items()
+                             if str(_dep.get(k)) != str(v)]
+                    _extra = [k for k in _dep if k not in _official]
+                    chk(not _diff and not _extra,
+                        'resources/zh-Hans.json 与官方原版一致（归档比对 %d 条）'
+                        % len(_official),
+                        ('值不同 %s / 多出键 %s' % (_diff[:3], _extra[:3]))
+                        if (_diff or _extra) else '逐键一致，无汉化残留')
         else:
             chk(False, 'resources/zh-Hans.json 状态异常')
 
@@ -366,9 +477,7 @@ def main():
     # 标题栏补丁以 \uXXXX 大写/小写转义形态写入（Latin1 字节级），
     # 需检测码点落在 CJK 区间的转义序列
     esc = re.compile(rb'\\u([0-9a-fA-F]{4})')
-    JS_FILES = ('c49da61a8-CCivQmSM.js', 'shared-21-DExJa6Im.js',
-                'shared-20-78nc04b9.js', 'shared-52-DOMr1cuc.js')
-    for n in JS_FILES:
+    for n in _js_patch_targets(A1):
         p = os.path.join(A1, n)
         bp = os.path.join(BAK_DIR, n)
         if not os.path.exists(p):
@@ -505,7 +614,10 @@ def main():
             _st, _start = _svc
             chk(True, '服务 Claude_zh 已注册（状态 %s / 启动类型 %s）' % (_st, _start))
             chk(_st == 'Running', '服务 Claude_zh 正在运行')
-            chk(_start == 'Automatic', '服务 Claude_zh 为开机自动启动')
+            # CIM Win32_Service.StartMode 取值为 'Auto'；Get-Service.StartType 才是
+            # 'Automatic'。二者都要接受，否则该项会恒定失败。
+            chk(_start in ('Auto', 'Automatic'),
+                '服务 Claude_zh 为开机自动启动（当前 %s）' % _start)
         chk(not os.path.exists(os.path.join(_su, 'claude-zh-heal.cmd')),
             '旧版登录自检自启项已清理')
         chk(not os.path.exists(os.path.join(ZH_HOME, 'start-claude-zh.cmd')),
@@ -519,6 +631,22 @@ def main():
             '登录自检自启项已移除')
         chk(not os.path.exists(os.path.join(_su, 'claude-zh-skills-watch.cmd')),
             '旧版驻留自启项已移除')
+
+    # [10b] 免登录网关配置（官方 3P 模式，可选；仅安装态且配置过才有核验对象。
+    # 卸载态下 .claude\zh 已删、无法得知曾经的配置 id，由卸载脚本负责还原。）
+    if installed:
+        print('\n[10b] 免登录网关配置（可选）')
+        _gid = (load(_ctx) or {}).get('gatewayConfigId')
+        if not _gid:
+            print('      未配置免登录网关（gateway.json 未提供，跳过）')
+        else:
+            _lib = os.path.join(os.environ.get('LOCALAPPDATA', ''),
+                                'Claude-3p', 'configLibrary')
+            chk(os.path.exists(os.path.join(_lib, _gid + '.json')),
+                '网关配置 <id>.json 已写入 configLibrary')
+            _gmeta = load(os.path.join(_lib, '_meta.json')) or {}
+            chk(_gmeta.get('appliedId') == _gid,
+                'configLibrary 索引 appliedId 指向该配置')
         chk(not os.path.exists(ZH_HOME), '%USERPROFILE%\\.claude\\zh 已删除')
 
     print('\n' + '=' * 66)

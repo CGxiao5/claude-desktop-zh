@@ -530,6 +530,11 @@ def find_entry(data, en):
             i = data.find(needle, start)
             if i < 0:
                 return None
+            # 表项头部在命中点前 8 字节；命中落在文件头 8 字节内说明不是真表项，
+            # 直接跳过，避免负偏移让 struct 抛 error。
+            if i < 8:
+                start = i + 1
+                continue
             hdr = struct.unpack_from('<I', data, i - 8)[0]
             if hdr >> 31 == 0 and (hdr & 0x7FFFFFFF) == len(en):
                 return (i, hdr, len(en), True)
@@ -541,6 +546,10 @@ def find_entry(data, en):
             i = data.find(needle, start)
             if i < 0:
                 return None
+            # 同上：头部在命中点前 8 字节，命中过前则跳过
+            if i < 8:
+                start = i + 1
+                continue
             hdr = struct.unpack_from('<I', data, i - 8)[0]
             if hdr >> 31 == 1 and (hdr & 0x7FFFFFFF) == len(needle):
                 return (i, hdr, align4(len(needle)) // 2, False)

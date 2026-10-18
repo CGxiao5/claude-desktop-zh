@@ -28,7 +28,10 @@ CJK = re.compile(r'[\u4e00-\u9fff]')
 # verify_state / build_additions 一致；按名字排序会选中共存的旧版本目录）。
 R = None
 if '--res' in sys.argv:
-    R = sys.argv[sys.argv.index('--res') + 1]
+    _ri = sys.argv.index('--res')
+    if _ri + 1 >= len(sys.argv):
+        raise SystemExit('缺少参数：--res 需要指定 app\\resources 目录路径')
+    R = sys.argv[_ri + 1]
 else:
     _ctx = os.path.join(os.environ.get('USERPROFILE', ''), '.claude', 'zh',
                         'install-context.json')
@@ -84,7 +87,16 @@ print('\n[B] 产物规模与仓库计数交叉核对')
 chk(len(ck) >= len(fe), 'custom-keys-zh.json(%d) >= fe-key(%d)（含值映射衍生词条）' % (len(ck), len(fe)))
 chk(len(so) >= len(sv), 'shell-overlay-zh.json(%d) >= shell-val(%d)' % (len(so), len(sv)))
 
-if R:
+# 汉化是否已安装：install-context.json / .claude\zh 由安装写入，卸载时删除。
+# 未安装时部署词表本就不存在，属预期，[C] 应跳过而不是判失败（否则卸载后
+# 本检查恒定退出码 1，把正常状态报成"构建失败"）。
+_zh_home = os.path.join(os.environ.get('USERPROFILE', ''), '.claude', 'zh')
+_zh_installed = (os.path.isfile(os.path.join(_zh_home, 'install-context.json'))
+                 or os.path.isdir(_zh_home))
+
+if R and not _zh_installed:
+    print('\n[C] 跳过（当前未安装汉化，部署目标不存在属预期）')
+elif R:
     print('\n[C] 部署目标生效核验')
     i18n = os.path.join(R, 'ion-dist', 'i18n')
     dep = os.path.join(i18n, 'zh-Hans.json')
@@ -126,6 +138,42 @@ print('\n[D] 可移植性：硬编码路径扫描')
 # 检测目标：绑定单一版本/单一用户/单一盘符包路径的绝对路径。
 # 豁免：WindowsApps 下的自动探测 glob（os.listdir + startswith('Claude_')）属
 # 运行时探测，非硬编码。
+
+
+def _py_narrative_lines(path):
+    """返回 .py 文件中属于注释与 docstring 的行号集合。
+
+    本扫描针对的是可执行代码里的路径字面量；docstring / 注释中的示例路径
+    （如 zh_service.py 的 "形如 C:\\Users\\<名>\\..." 说明文字）不构成
+    可移植性问题，应跳过，否则会误报。
+    """
+    import ast
+    import io as _io
+    import tokenize
+    skip = set()
+    try:
+        src = open(path, encoding='utf-8', errors='replace').read()
+        tree = ast.parse(src)
+    except Exception:
+        return skip
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.Module, ast.FunctionDef,
+                             ast.AsyncFunctionDef, ast.ClassDef)):
+            first = node.body[0] if node.body else None
+            if (isinstance(first, ast.Expr)
+                    and isinstance(first.value, ast.Constant)
+                    and isinstance(first.value.value, str)):
+                skip.update(range(first.lineno,
+                                  (first.end_lineno or first.lineno) + 1))
+    try:
+        for tok in tokenize.generate_tokens(_io.StringIO(src).readline):
+            if tok.type == tokenize.COMMENT:
+                skip.add(tok.start[0])
+    except Exception:
+        pass
+    return skip
+
+
 HARD = re.compile(r'[A-Z]:[\\\\/]{1,2}(Program Files|Users|Kimi)')
 script_dirs = [os.path.join(ROOT, 'scripts'), T]
 found = []
@@ -138,7 +186,10 @@ for sd in script_dirs:
             lines = open(p, encoding='utf-8', errors='replace').read().splitlines()
         except Exception:
             continue
+        skip_lines = _py_narrative_lines(p) if n.endswith('.py') else ()
         for ln, line in enumerate(lines, 1):
+            if ln in skip_lines:
+                continue  # 注释 / docstring 中的示例路径不参与硬编码判定
             for m in HARD.finditer(line):
                 # 探测根目录常量（路径恰为 WindowsApps，不含版本目录）豁免：
                 # 它是运行时 listdir 的起点，不是绑定版本的安装路径

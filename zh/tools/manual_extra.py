@@ -198,7 +198,6 @@ KEY_EXTRA = {
  '9ojXq4eRSB': '快速模式已处于开启状态。',
  'BCJLRHrfvy': '你的组织当前无法使用快速模式。',
  'lkXRh+mFJ4': '快速模式需要用量额度。请在<link>用量</link>中开启。',
- 'EpijVevLzK': '快速模式',
 }
 
 # VAL_EXTRA: 英文值->zh（纯文本，按值复用到所有同值 key）

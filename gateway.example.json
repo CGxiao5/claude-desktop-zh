@@ -1,0 +1,6 @@
+{
+  "baseUrl": "https://<你的网关域名>",
+  "apiKey": "<YOUR_API_KEY>",
+  "authScheme": "bearer",
+  "models": []
+}

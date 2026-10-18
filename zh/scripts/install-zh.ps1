@@ -209,7 +209,6 @@ if (-not $alreadyPatched -and $wlFile) { $toBackup += $wlFile }
 if ($nmFile) { $toBackup += $nmFile }
 if ($tabsFile -and -not $tabsPatched) { $toBackup += $tabsFile }
 if ($tabs2File -and -not $tabs2Patched) { $toBackup += $tabs2File }
-if ($tabs2File -and -not $tabs2Patched) { $toBackup += $tabs2File }
 foreach ($f in $toBackup) {
   $dst = Join-Path $bak (Split-Path $f -Leaf)
   if (-not (Test-Path $dst)) { Copy-Item $f $dst -Force }
@@ -695,6 +694,49 @@ if ((Test-Path $wsScript) -and $pyExe) {
   }
 } else {
   Write-Warn2 '未找到 python 或 write-state.py，跳过自愈基线'
+}
+
+# ---------- 7h. 免登录网关配置（可选；Claude 官方第三方推理 3P 模式，非破解） ----------
+# 凭据来源唯一且明确：包根目录 gateway.json（用户复制 gateway.example.json 填写）。
+# 校验与写入逻辑全在 apply-gateway-config.py：exit 0=已写入 3=未提供/已有他人配置 1=校验失败。
+Write-Step '[7h] 免登录网关配置（可选）...'
+$gwScript = Join-Path $PSScriptRoot 'apply-gateway-config.py'
+if ((Test-Path $gwScript) -and $pyExe) {
+  $oldEap3 = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  try {
+    & $pyExe $gwScript
+    if ($LASTEXITCODE -eq 1) { Write-Warn2 '网关凭据校验未通过，已跳过（不影响汉化本体）' }
+    $global:LASTEXITCODE = 0
+  } catch {
+    Write-Warn2 ('网关配置写入失败（不影响汉化本体）: ' + $_.Exception.Message)
+  } finally {
+    $ErrorActionPreference = $oldEap3
+  }
+} else {
+  Write-Ok '网关配置组件缺失，跳过（不影响汉化本体）'
+}
+
+# ---------- 7i. 跳过 Claude Code 初次安装确认（写入 ~/.claude.json 的 hasCompletedOnboarding=true） ----------
+# 唯一实现：仅增量写该字段，其余字段保留；仅对 Claude Code CLI 生效（桌面版主界面登录不受影响）。
+# 生命周期：安装/更新写入；仅卸载汉化不触碰；彻底卸载由 Claude汉化.cmd 随用户数据删除。
+# exit 0=已写入/已存在  1=失败（仅警告，不中断安装）。
+Write-Step '[7i] 跳过 Claude Code 初次安装确认...'
+$obScript = Join-Path $PSScriptRoot 'apply-onboarding-skip.py'
+if ((Test-Path $obScript) -and $pyExe) {
+  $oldEap4 = $ErrorActionPreference
+  $ErrorActionPreference = 'Continue'
+  try {
+    & $pyExe $obScript
+    if ($LASTEXITCODE -ne 0) { Write-Warn2 '初次安装确认跳过写入失败（不影响汉化本体）' }
+    $global:LASTEXITCODE = 0
+  } catch {
+    Write-Warn2 ('初次安装确认跳过写入失败（不影响汉化本体）: ' + $_.Exception.Message)
+  } finally {
+    $ErrorActionPreference = $oldEap4
+  }
+} else {
+  Write-Ok '组件缺失，略过本步骤（不影响汉化本体）'
 }
 
 # ---------- 7g. 注册并启动 Windows 服务 Claude_zh ----------

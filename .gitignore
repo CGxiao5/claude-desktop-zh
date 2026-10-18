@@ -61,6 +61,8 @@ logs/
 *.log.*
 
 # ---------- 7. 密钥与本地配置（防误提交） ----------
+# gateway.json 含明文网关地址与 API Key，禁止提交；请复制根目录 gateway.example.json 后自行填写
+gateway.json
 .env
 .env.*
 *.key

@@ -35,6 +35,9 @@ set "RAD=%APPDATA%"
 if not defined LAD set "LAD=%UP%\AppData\Local"
 if not defined RAD set "RAD=%UP%\AppData\Roaming"
 if not defined UP set "UP=%USERPROFILE%"
+REM 彻底卸载流程全程依赖 %TEMP% 存放扫描脚本与日志；极少数环境（精简
+REM 系统 / 服务上下文）该变量可能缺失，缺了会写到盘符根目录而失败。
+if not defined TEMP set "TEMP=%LAD%\Temp"
 set "ZH=%UP%\.claude\zh"
 REM ★ 安全护栏基准：脚本自身所在目录（汉化包目录）。
 REM   彻底卸载清除的是 Claude 的残留，汉化包本身（Claude汉化.cmd / README.md /
@@ -116,9 +119,9 @@ if !MRETRY! GEQ 10 (
   pause
   goto :EXIT_OK
 )
-REM 哨兵值技巧：set /p 在输入流结束(EOF)时不会改写变量，据此可区分
-REM "用户直接按回车"(变量被设为空) 与 "无输入可读"(保留哨兵值)。
-REM 否则输入流异常时会陷入无限重输的死循环。
+REM 哨兵值技巧：set /p 读不到内容时会保持变量原值（实测：直接回车与输入流
+REM 结束 EOF 都是如此，二者无法区分）。统一按"未读取到输入"计数重试，
+REM 既避免误判成某个菜单项，也不会在输入流异常时陷入无限重输的死循环。
 set "CH=__EOF__"
 set /p "CH=请输入数字并选择： "
 if "!CH!"=="__EOF__" (
@@ -157,6 +160,7 @@ echo     - 汉化 Claude Code 内核命令描述
 echo     - 设置界面语言 locale = zh-Hans
 echo     - 部署内置 Python 运行环境（随汉化包携带，离线，不依赖系统 Python）
 echo     - 注册并启动 Windows 服务 Claude_zh（维持汉化，开机自启）
+echo     - （可选）检测到包内 gateway.json 时，写入免登录网关配置（官方 3P 模式）
 echo.
 echo   注意：安装过程会自动退出正在运行的 Claude。
 echo.
@@ -405,7 +409,16 @@ echo  [警告] 此操作不经过回收站，无法通过回收站撤销。
 echo.
 
 REM ---------------- 确认环节：回车或 Y 执行，N 取消，非法重输 ----------------
+REM set /p 的关键陷阱（实测确认）：输入为空（直接回车）与输入流已结束(EOF)时，
+REM 变量都保持原值、都不会被改写——单靠它无法区分"人按了回车"和"没的可读"。
+REM 因此"回车=确认执行"必须先确认眼前是有人在键盘前操作的交互式控制台。
+REM 判定方法：Windows 自带 timeout.exe 在输入被重定向时立即以 errorlevel 1 退出，
+REM 在真实控制台返回 0。必须写全路径——否则可能命中 Git 自带的 GNU timeout
+REM （它对 /t 参数一律报用法错误、返回 125，会让判定彻底失效）。
 set "CRETRY=0"
+set "IN_TTY=0"
+"%SystemRoot%\System32\timeout.exe" /t 0 >nul 2>&1
+if not errorlevel 1 set "IN_TTY=1"
 
 :CONFIRM_LOOP
 if !CRETRY! GEQ 10 (
@@ -415,18 +428,18 @@ if !CRETRY! GEQ 10 (
   pause
   goto :MENU
 )
-REM 哨兵值：EOF 时变量保持 __EOF__。此处绝不能把它当成"回车=确认执行"，
-REM 否则输入流一旦异常就会直接触发彻底删除——宁可取消，不可误删。
-set "CONFIRM=__EOF__"
+set "CONFIRM="
 set /p "CONFIRM=确认执行？回车或输入 Y 执行，输入 N 取消： "
-if "!CONFIRM!"=="__EOF__" (
-  set /a CRETRY+=1
+if not defined CONFIRM (
+  REM 交互式控制台：按提示语义，回车即确认执行。
+  if "!IN_TTY!"=="1" goto :DO_REMOVE
   echo.
-  echo  [无效] 未读取到输入：请输入 Y（或直接回车）执行、N 取消。
+  echo  [已取消] 未检测到键盘输入（脚本可能以重定向/自动方式运行）。
+  echo           这种情况不按"回车"处理，请输入明确的 Y 后重试，以免误删。
   echo.
-  goto :CONFIRM_LOOP
+  pause
+  goto :MENU
 )
-if /i "!CONFIRM!"==""  goto :DO_REMOVE
 if /i "!CONFIRM!"=="Y" goto :DO_REMOVE
 if /i "!CONFIRM!"=="YES" goto :DO_REMOVE
 if /i "!CONFIRM!"=="N" goto :CONFIRM_CANCEL
@@ -443,11 +456,6 @@ echo  已取消，未做任何改动。
 echo.
 pause
 goto :MENU
-set /a CRETRY+=1
-echo.
-echo  [无效] "!CONFIRM!" 不是有效输入：请输入 Y（或直接回车）执行、N 取消。
-echo.
-goto :CONFIRM_LOOP
 
 REM ============================================================================
 REM  [3] 执行彻底卸载
@@ -629,6 +637,8 @@ REM ============================================================================
 set "_RP=%~1"
 set "_RN=%~2"
 set "_RB=%~3"
+if not defined _RN goto :eof
+if "!_RN!"=="" goto :eof
 if !_RN! LEQ 0 goto :eof
 for /l %%i in (1,1,!_RN!) do (
   call set "_RT=%%!_RP!%%i%%"

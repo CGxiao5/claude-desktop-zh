@@ -9,7 +9,7 @@
   4. kernel-source-patch-log —— 扫描内核 UTF-8 中文源码字面量的偏移
   5. asar-source-patch-log   —— 扫描 app.asar 中文词条偏移 + 重算 integrity 双向哈希
 
-用法: python rebuild_runtime.py          # 重建到 %USERPROFILE%\.claude\zh\backup
+用法: python rebuild_runtime.py          # 重建到 %USERPROFILE%\\.claude\\zh\\backup
       python rebuild_runtime.py --check  # 只检查不写盘
 """
 import hashlib
@@ -93,6 +93,44 @@ def w(path, data):
     print('    写出 %s' % os.path.relpath(path, ZH))
 
 
+# 旧版写死的清单（前端资源名带内容哈希，Claude 升级即变，仅作最后兜底）
+LEGACY_JS = ['c49da61a8-CCivQmSM.js', 'shared-21-DExJa6Im.js',
+             'shared-20-78nc04b9.js', 'shared-52-DOMr1cuc.js']
+
+
+def js_targets(assets_dir, bak_dir):
+    """解析本版本的 JS 补丁目标文件名（与 verify_state._js_patch_targets 同策略）。
+
+    前端资源名带内容哈希，升级后必然变化，写死会导致本脚本在 [1] 步直接
+    FileNotFoundError。优先级：state.json > 备份目录中的 .js > 目录内容扫描 > 旧版清单。
+    """
+    names = []
+    st = os.path.join(ZH, 'state.json')
+    if os.path.isfile(st):
+        try:
+            for it in json.load(open(st, encoding='utf-8')).get('js', []):
+                n = os.path.basename(it.get('path') or '')
+                if n.endswith('.js') and n not in names:
+                    names.append(n)
+        except Exception:
+            names = []
+    if not names and os.path.isdir(bak_dir):
+        names = sorted(n for n in os.listdir(bak_dir) if n.endswith('.js'))
+    if not names and os.path.isdir(assets_dir):
+        marks = (b'"en-US","zh-Hans"', b'localName:"\\u7B80',
+                 b'label:"\\u804A', b'label:"\\u534F')
+        for n in sorted(os.listdir(assets_dir)):
+            if not n.endswith('.js'):
+                continue
+            try:
+                b = open(os.path.join(assets_dir, n), 'rb').read()
+            except Exception:
+                continue
+            if any(m in b for m in marks):
+                names.append(n)
+    return names or list(LEGACY_JS)
+
+
 def main():
     print('=' * 64)
     print('  运行时资产重建%s' % ('（仅检查）' if CHECK_ONLY else ''))
@@ -101,10 +139,13 @@ def main():
 
     # ---------- 1. JS 原始文件 ----------
     print('\n[1] 前端 JS 原始文件（逆向替换）')
-    js_files = ['c49da61a8-CCivQmSM.js', 'shared-21-DExJa6Im.js',
-                'shared-20-78nc04b9.js', 'shared-52-DOMr1cuc.js']
+    js_files = js_targets(V1, BAKVER)
+    print('  目标文件: %s' % ', '.join(js_files))
     for name in js_files:
         p = os.path.join(V1, name)
+        if not os.path.isfile(p):
+            print('  [跳过] 文件不存在（版本已变更）: %s' % name)
+            continue
         raw = open(p, 'rb').read().decode('latin-1')
         n_rev = 0
         for new, old in JS_REV:
@@ -112,7 +153,6 @@ def main():
             if cnt:
                 raw = raw.replace(new, old)
                 n_rev += cnt
-        leftover = len(re.findall(r'\\u[0-9A-Fa-f]{4}', raw))
         cjk = {chr(int(x, 16)) for x in re.findall(r'\\u([0-9A-Fa-f]{4})', raw)}
         cjk = {c for c in cjk if '\u4e00' <= c <= '\u9fff'}
         print('  %-26s 逆向 %d 处 | 残留 CJK 转义 %d 个（官方自带简繁体词条属正常）'
@@ -124,8 +164,8 @@ def main():
     cur = json.load(open(os.path.join(RES, 'zh-Hans.json'), encoding='utf-8'))
     ov = json.load(open(os.path.join(ROOT, 'resources', 'shell-overlay-zh.json'),
                        encoding='utf-8'))
-    # 安全检查：overlay 键若与官方键重叠，则减法会误删官方键
-    overlap = [k for k in ov if k in cur and False]  # 无法得知官方原值，标记即可
+    # 注意：overlay 键若与官方键重叠，减法会误删官方键；但无法得知官方原值，
+    # 只能依赖 overlay 词表与官方词表键集不重叠这一前提（由 sync_check [B] 保证规模）。
     official = {k: v for k, v in cur.items() if k not in ov}
     print('  当前部署 %d 条 - overlay %d 条 = 官方 %d 条'
           % (len(cur), len(ov), len(official)))
@@ -141,7 +181,14 @@ def main():
     spec.loader.exec_module(tk)
     table, n_store = tk.load_translations()
     kpath = tk.find_kernel()
-    kdata = open(kpath, 'rb').read()
+    # 未安装 Claude Code 内核时 find_kernel() 返回 None（与安装脚本
+    # "[kernel] 未找到 claude.exe 内核，跳过" 一致），此时不能 open(None)，
+    # 否则整个重建流程在此崩溃——内核补丁日志本就无从产出，按跳过处理。
+    if not kpath:
+        print('  [跳过] 未找到 claude.exe 内核（未安装 Claude Code 内核，属正常）')
+        kdata = b''
+    else:
+        kdata = open(kpath, 'rb').read()
     log_k = {}
     for en, zh in table.items():
         try:
@@ -154,13 +201,16 @@ def main():
             orig_header = 0x80000000 | len(orig_payload)
             region = align4(len(orig_payload))
             # 补丁后：units = region/2（8->16 位整槽转换）
-            unit_ok = lambda u, txt: u * 2 == region and u >= len(zh) and txt == zh
+            # 默认参数绑定循环变量，避免闭包按引用捕获（B023）
+            unit_ok = lambda u, txt, region=region, zh=zh: (  # noqa: B023
+                u * 2 == region and u >= len(zh) and txt == zh)
         else:
             orig_payload = en.encode('utf-16-le')
             orig_header = len(en)           # 码元数
             region = align4(len(orig_payload))
             # 16 位条目：补丁不改槽位，units 仍为原码元数
-            unit_ok = lambda u, txt: u == len(en) and u >= len(zh) and txt == zh
+            unit_ok = lambda u, txt, en=en, zh=zh: (  # noqa: B023
+                u == len(en) and u >= len(zh) and txt == zh)
         # 扫描补丁态条目：中文 UTF-16LE 前缀命中 + 头部为 16 位
         offs = []
         needle = zh.encode('utf-16-le')
@@ -169,6 +219,10 @@ def main():
             i = kdata.find(needle, i)
             if i < 0:
                 break
+            # 命中点前 8 字节才是表项头部；落在文件头 8 字节内的匹配不是表项，跳过
+            if i < 8:
+                i += 1
+                continue
             hdr = struct.unpack_from('<I', kdata, i - 8)[0]
             if hdr >> 31 == 0:
                 units = hdr & 0x7FFFFFFF
@@ -185,52 +239,63 @@ def main():
                 'orig_header': orig_header,
                 'orig_payload_hex': (orig_payload + b'\x00' * (region - len(orig_payload))).hex(),
             }
-    print('  重建 %d 条（译文表 %d 条）' % (len(log_k), len(table)))
-    miss_k = [en for en in table if en not in log_k]
-    leak = []
-    for en in miss_k:
-        zh_m = table[en]
-        if kdata.find(zh_m.encode('utf-16-le')) >= 0:
-            leak.append(en)
-    if miss_k:
-        print('  未命中 %d 条（可能属其他内核版本或槽位溢出未打上）' % len(miss_k))
-    if leak:
-        print('  [警告] 其中 %d 条内核中存在中文却未入日志（需人工核查）：%s'
-              % (len(leak), [x[:40] for x in leak[:3]]))
+    if not kpath:
+        print('  [跳过] 内核不存在，不产出 kernel-patch-log')
     else:
-        print('  [安全] 未命中条目在内核中均无对应中文（补丁时即未生效，还原后无残留）')
-    w(os.path.join(BAK, 'kernel-patch-log.json'), log_k)
+        print('  重建 %d 条（译文表 %d 条）' % (len(log_k), len(table)))
+        miss_k = [en for en in table if en not in log_k]
+        leak = []
+        for en in miss_k:
+            zh_m = table[en]
+            if kdata.find(zh_m.encode('utf-16-le')) >= 0:
+                leak.append(en)
+        if miss_k:
+            print('  未命中 %d 条（可能属其他内核版本或槽位溢出未打上）' % len(miss_k))
+        if leak:
+            print('  [警告] 其中 %d 条内核中存在中文却未入日志（需人工核查）：%s'
+                  % (len(leak), [x[:40] for x in leak[:3]]))
+        else:
+            print('  [安全] 未命中条目在内核中均无对应中文（补丁时即未生效，还原后无残留）')
+        w(os.path.join(BAK, 'kernel-patch-log.json'), log_k)
 
     # ---------- 4. kernel-source-patch-log.json ----------
     print('\n[4] kernel-source-patch-log.json（UTF-8 字面量偏移）')
-    tbl_src = zhstore.get(zhstore.KERNEL_SOURCE)
-    log_ks = {}
-    for en, info in tbl_src.items():
-        zh = info['zh'] if isinstance(info, dict) else info
-        nb = en.encode('latin-1', 'replace')
-        b = zh.encode('utf-8')
-        if len(b) > len(nb):
-            continue
-        padded = b + b' ' * (len(nb) - len(b))
-        offs = []
-        i = 0
-        while True:
-            i = kdata.find(padded, i)
-            if i < 0:
-                break
-            offs.append(i)
-            i += 1
-        if offs:
-            log_ks[en] = {'offsets': offs, 'zh': zh}
-    print('  重建 %d 条（词表 %d 条）' % (len(log_ks), len(tbl_src)))
-    w(os.path.join(BAK, 'kernel-source-patch-log.json'), log_ks)
+    if not kpath:
+        print('  [跳过] 内核不存在，不产出 kernel-source-patch-log')
+    else:
+        tbl_src = zhstore.get(zhstore.KERNEL_SOURCE)
+        log_ks = {}
+        for en, info in tbl_src.items():
+            zh = info['zh'] if isinstance(info, dict) else info
+            nb = en.encode('latin-1', 'replace')
+            b = zh.encode('utf-8')
+            if len(b) > len(nb):
+                continue
+            padded = b + b' ' * (len(nb) - len(b))
+            offs = []
+            i = 0
+            while True:
+                i = kdata.find(padded, i)
+                if i < 0:
+                    break
+                offs.append(i)
+                i += 1
+            if offs:
+                log_ks[en] = {'offsets': offs, 'zh': zh}
+        print('  重建 %d 条（词表 %d 条）' % (len(log_ks), len(tbl_src)))
+        w(os.path.join(BAK, 'kernel-source-patch-log.json'), log_ks)
 
     # ---------- 5. asar-source-patch-log.json ----------
     print('\n[5] asar-source-patch-log.json（含 integrity 双向哈希）')
     asar_path = os.path.join(RES, 'app.asar')
     exe_path = os.path.join(PKG, 'app', 'claude.exe')
     data = bytearray(open(asar_path, 'rb').read())
+    if len(data) < 16:
+        raise ValueError('app.asar 过小（%d 字节），不是合法的 asar 文件' % len(data))
     js_len = struct.unpack('<I', bytes(data[12:16]))[0]
+    if js_len <= 0 or 16 + js_len > len(data):
+        raise ValueError('app.asar header 长度异常（js_len=%d，文件 %d 字节）'
+                         % (js_len, len(data)))
     hdr_raw = bytearray(data[16:16 + js_len])
     j = json.loads(bytes(hdr_raw).decode('utf-8'))
     base = 16 + js_len

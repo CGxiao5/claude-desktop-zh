@@ -283,6 +283,14 @@ if (Test-Path $asarLog) {
   }
 }
 
+# ---------- 3e-2. 还原免登录网关配置（apply-gateway-config.py --restore） ----------
+# 仅当本次安装写入过网关配置（install-context.json 含 gatewayConfigId）才有动作；
+# 须在 [3f] 删除 .claude\zh 之前执行（meta 备份与该上下文都在目录内，归档可找回）。
+$gwScript = Join-Path $PSScriptRoot 'apply-gateway-config.py'
+if ((Test-Path $gwScript) -and $pyExe -and (Test-Path (Join-Path $zhHome 'install-context.json'))) {
+  try { & $pyExe $gwScript --restore } catch { Write-Warn2 ('网关配置还原失败: ' + $_.Exception.Message) }
+}
+
 $skillsBase = Join-Path $env:LOCALAPPDATA 'Claude-3p\local-agent-mode-sessions\skills-plugin'
 if (Test-Path $skillsBase) {
   $restoredSkills = 0

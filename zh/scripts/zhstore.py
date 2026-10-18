@@ -80,7 +80,6 @@ import json
 import os
 import shutil
 import sys
-import time
 from datetime import datetime, timezone
 
 # ---------------- 命名空间 ----------------
@@ -281,9 +280,15 @@ def _restore_from_backup(target, verbose=False):
 
 # ---------------- 读取 ----------------
 def get(ns, default=None):
-    """返回 {键: 中文} 的扁平映射（供翻译表直接消费）。"""
+    """返回 {键: 中文} 的扁平映射（供翻译表直接消费）。
+
+    default：命名空间不存在或为空时返回该值（此前该参数被声明却未生效，
+    属于签名与实现不一致）；未传时保持返回空 dict 的历史行为。
+    """
     db = load()
     bucket = db['namespaces'].get(ns) or {}
+    if not bucket and default is not None:
+        return default
     return dict((k, v.get('zh', '')) for k, v in bucket.items() if v.get('zh'))
 
 
@@ -473,7 +478,11 @@ def _cli():
         print(stats())
         return 0
     if '--get' in a:
-        ns = a[a.index('--get') + 1]
+        _i = a.index('--get')
+        if _i + 1 >= len(a):
+            sys.stderr.write('缺少参数：--get 需要指定命名空间，如 --get fe-key\n')
+            return 1
+        ns = a[_i + 1]
         d = get(ns)
         json.dump(d, io.open(store_path() + '.export-%s.json' % ns,
                              'w', encoding='utf-8'),
@@ -482,10 +491,17 @@ def _cli():
         return 0
     if '--set' in a:
         i = a.index('--set')
+        if i + 3 >= len(a):
+            sys.stderr.write('缺少参数：--set 需要 <命名空间> <键> <中文>\n')
+            return 1
         ns, key, zh = a[i + 1], a[i + 2], a[i + 3]
         origin = 'manual'
         if '--origin' in a:
-            origin = a[a.index('--origin') + 1]
+            j = a.index('--origin')
+            if j + 1 >= len(a):
+                sys.stderr.write('缺少参数：--origin 需要指定来源值（如 manual/auto）\n')
+                return 1
+            origin = a[j + 1]
         r = upsert(ns, key, zh, origin=origin, force=True)
         ok, bak, err = save()
         print('%s [%s] %s' % (ns, r, key))

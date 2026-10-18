@@ -77,6 +77,10 @@ def main():
             i = kdata.find(needle, i)
             if i < 0:
                 break
+            # 命中点前 8 字节才是表项头部；落在文件头 8 字节内的匹配不是表项，跳过
+            if i < 8:
+                i += 1
+                continue
             hdr = struct.unpack_from('<I', kdata, i - 8)[0]
             if hdr >> 31 == 0:
                 units = hdr & 0x7FFFFFFF

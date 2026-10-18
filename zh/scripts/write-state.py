@@ -81,7 +81,8 @@ def scan_js(v1_dir):
     cache = {}
     for p in files:
         try:
-            cache[p] = open(p, 'rb').read()
+            with open(p, 'rb') as f:
+                cache[p] = f.read()
         except OSError:
             continue
 

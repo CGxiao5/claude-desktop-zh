@@ -6,7 +6,7 @@
 # 词条持久化（v2.5）：本构建器以**统一词条仓库**（scripts/zhstore.py）为第一来源，
 # manual_extra.py / shell_manual.py 等人工词表作为「最新人工输入」覆盖之，
 # 构建结束前再把人工词条回写仓库，使仓库始终是唯一真相源。
-import json, io, sys, re, os
+import json, io, sys, os
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 # 包内相对定位：本脚本位于 <包根>/tools/，词表资源在 <包根>/resources/
@@ -29,7 +29,10 @@ def _detect_res():
     return best[1] if best else None
 R = None
 if '--res' in sys.argv:
-    R = sys.argv[sys.argv.index('--res') + 1]
+    _ri = sys.argv.index('--res')
+    if _ri + 1 >= len(sys.argv):
+        raise SystemExit('缺少参数：--res 需要指定 app\\resources 目录路径')
+    R = sys.argv[_ri + 1]
 else:
     R = _detect_res()
 if not R:
