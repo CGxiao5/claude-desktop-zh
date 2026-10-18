@@ -98708,6 +98708,26 @@
    }
   },
   "kernel-table": {
+   " needs network access to ": {
+    "origin": "manual",
+    "updated": "2026-10-18T13:54:54Z",
+    "zh": "请求网络访问："
+   },
+   " needs permission for ": {
+    "origin": "manual",
+    "updated": "2026-10-18T13:54:54Z",
+    "zh": "请求使用权限："
+   },
+   " needs your input": {
+    "origin": "manual",
+    "updated": "2026-10-18T13:54:54Z",
+    "zh": "需要你的输入"
+   },
+   " needs your input: ": {
+    "origin": "manual",
+    "updated": "2026-10-18T13:54:54Z",
+    "zh": "需要输入："
+   },
    " tool script (script API and gotchas, resume, quality patterns, worked examples). Load before authoring a script for a workflow the user already opted into; it does not itself authorize running one.": {
     "origin": "manual",
     "updated": "2026-10-16T02:50:32Z",
@@ -98718,6 +98738,11 @@
     "prev": "（已移除）创建/管理子代理，或编辑 .claude/agents/",
     "updated": "2026-10-16T07:54:32Z",
     "zh": "（已移除）创建/管理子智能体，或编辑 .claude/agents/"
+   },
+   "(unnamed tool)": {
+    "origin": "manual",
+    "updated": "2026-10-18T13:54:54Z",
+    "zh": "（未命名工具）"
    },
    "); with no level given, it reuses the level you typed last. Pass --comment to post findings as inline PR comments, or --fix to apply the findings to the working tree after the review. Pass --max-findings <n> to report up to n findings, or --max-findings all for every finding. The choice stays until you pass --max-findings default.": {
     "origin": "manual",
@@ -98815,6 +98840,36 @@
     "origin": "seed",
     "updated": "2026-10-14T15:37:25Z",
     "zh": "选择云端会话是否使用本机启用的插件"
+   },
+   "Claude Code login needs attention: credentials could not be saved": {
+    "origin": "manual",
+    "updated": "2026-10-18T13:54:54Z",
+    "zh": "Claude Code 登录需要注意：凭据未能保存"
+   },
+   "Claude Code login needs attention: credentials may not have been saved": {
+    "origin": "manual",
+    "updated": "2026-10-18T13:54:54Z",
+    "zh": "Claude Code 登录需要注意：凭据可能未保存"
+   },
+   "Claude Code login successful": {
+    "origin": "manual",
+    "updated": "2026-10-18T13:54:54Z",
+    "zh": "Claude 登录成功"
+   },
+   "Claude is done using your computer": {
+    "origin": "manual",
+    "updated": "2026-10-18T13:54:54Z",
+    "zh": "Claude 已停止使用电脑"
+   },
+   "Claude is waiting for your input": {
+    "origin": "manual",
+    "updated": "2026-10-18T13:54:54Z",
+    "zh": "Claude 正在等待你的输入"
+   },
+   "Claude needs your permission to use ": {
+    "origin": "manual",
+    "updated": "2026-10-18T13:54:54Z",
+    "zh": "Claude 请求你允许使用"
    },
    "Clean up the changed code without changing behavior": {
     "origin": "seed",
@@ -100273,6 +100328,6 @@
    }
   }
  },
- "updated": "2026-10-18T11:08:26Z",
+ "updated": "2026-10-18T14:23:01Z",
  "version": 2
 }

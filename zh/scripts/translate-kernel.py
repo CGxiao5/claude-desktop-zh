@@ -34,12 +34,23 @@ import zhstore
 # 原文来自内核命令注册表（thinClientDispatch / type:"local" / menuDescription 对象）
 TRANSLATIONS = {
  # 与词条仓库 kernel-table 命名空间同步（仓库为唯一真相源，本表为兜底）
+ # ---- 系统通知文案（toast / os_notification，2026-10-18 增补）----
+ " needs network access to ":
+   " 请求网络访问：",
+ " needs permission for ":
+   " 请求使用权限：",
+ " needs your input":
+   " 需要你的输入",
+ " needs your input: ":
+   " 需要输入：",
  " tool script (script API and gotchas, resume, quality patterns, worked examples). Load before authoring a script for a workflow the user already opted into; it does not itself authorize running one.":
    "工具脚本的参考（脚本 API 与注意事项、恢复、质量模式、示例）。为用户已选择启用的工作流编写脚本前加载；它本身并不授权运行工作流。",
  "(removed) Ask Claude to create/manage subagents, or edit .claude/agents/":
    "（已移除）创建/管理子智能体，或编辑 .claude/agents/",
  "); with no level given, it reuses the level you typed last. Pass --comment to post findings as inline PR comments, or --fix to apply the findings to the working tree after the review. Pass --max-findings <n> to report up to n findings, or --max-findings all for every finding. The choice stays until you pass --max-findings default.":
    "）；未指定等级时沿用你上次输入的等级。传 --comment 将发现作为 PR 行内评论发布，或传 --fix 在审查后把修复应用到工作区。传 --max-findings <n> 最多报告 n 条发现，或 --max-findings all 报告全部。该选择保持有效，直到你传入 --max-findings default。",
+ "(unnamed tool)":
+   "（未命名工具）",
  ": from few high-confidence findings up to many, some of them uncertain":
    "：从少量高置信发现到大量发现（部分不确定）",
  "Activate pending plugin changes in the current session":
@@ -76,6 +87,18 @@ TRANSLATIONS = {
    "选择云智能体的默认环境",
  "Choose whether cloud sessions use the plugins enabled on this machine":
    "选择云端会话是否使用本机启用的插件",
+ "Claude Code login needs attention: credentials could not be saved":
+   "Claude Code 登录需要注意：凭据未能保存",
+ "Claude Code login needs attention: credentials may not have been saved":
+   "Claude Code 登录需要注意：凭据可能未保存",
+ "Claude Code login successful":
+   "Claude 登录成功",
+ "Claude is done using your computer":
+   "Claude 已停止使用电脑",
+ "Claude is waiting for your input":
+   "Claude 正在等待你的输入",
+ "Claude needs your permission to use ":
+   "Claude 请求你允许使用 ",
  "Clean up the changed code without changing behavior":
    "在不改变行为的前提下清理改动的代码",
  "Complete a security review of the pending changes on the current branch":
